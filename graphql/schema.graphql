@@ -5,26 +5,27 @@ type Account {
   name: String!
   orders: [Order]!
 }
+
 type Product {
-  id: String!
-  name: String!
-  description: String!
-  price: Float!
+    id: String!
+    name: String!
+    description: String!
+    price: Float!
 }
 
 type Order {
-  id: String!
-  createdAt: Time
-  totalPrice: Float!
-  products: [OrderProduct!]!
+      id: String!
+      createdAt: Time
+      totalPrice: Float!
+      products: [OrderProduct!]!
 }
 
 type OrderProduct {
     id: String!
     name: String!
-  description: String!
-  price: Float!
-  quantity: Int!
+    description: String!
+    price: Float!
+    quantity: Int!
 }
 input PaginationInput {
     skip: Int
@@ -62,5 +63,3 @@ type Query {
     products(pagination: PaginationInput, query: String, id: String):
     [Product!]!
 }
-
-
