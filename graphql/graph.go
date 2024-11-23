@@ -3,9 +3,9 @@ package main
 import "github.com/99designs/gqlgen/graphql"
 
 type Server struct {
-	//accountClient *account.Client
-	//catalogClient *catalog.Client
-	//orderClient   *order.Client
+	accountClient *account.Client
+	catalogClient *catalog.Client
+	orderClient   *order.Client
 }
 
 func NewGraphQlServer(accountUrl, catalogUrl, orderUrl string) (*Server, error) {

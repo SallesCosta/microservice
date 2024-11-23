@@ -3,6 +3,8 @@ package account
 import (
 	"context"
 	"database/sql"
+
+	_ "github.com/lib/pq"
 )
 
 type Repository interface {
@@ -36,17 +38,46 @@ func (r *postgresRepository) Close() {
 
 func (r *postgresRepository) Pint() error {
 	_ = r.db.Ping()
-}
-
-func (r *postgresRepository) PutAccount(ctx context.Context, a Account) error {
-
 	return nil
 }
 
-func (r *postgresRepository) GetAccountByID(ctx context.Context, id string) (*Account, error) {
-	return nil, nil
+func (r *postgresRepository) PutAccount(ctx context.Context, a Account) error {
+	_, err := r.db.ExecContext(ctx, "INSERT INTO accounts(id, name) VALUES ($1, $2)", a.ID, a.Name)
+	return err
 }
 
-func (r *postgresRepository) ListAccounts(ctx context.Context, skip uint64) ([]Account, error) {
-	return nil, nil
+func (r *postgresRepository) GetAccountByID(ctx context.Context, id string) (*Account, error) {
+	db, err := r.db.QueryRowContext(ctx, "SELECT id, name FROM account WHERE id = $1", id)
+	a, err := &Account{}
+	if err := row.Scan(&a.ID, &a.Name); err != nil {
+		return nil, err
+	}
+
+	return a, nil
+}
+
+func (r *postgresRepository) ListAccounts(ctx context.Context, skip uint64, take uint64) ([]Account, error) {
+	rows, err := r.db.QueryContext(ctx,
+		"SELECT id, name FROM accounts ORDER BY id DESC OFFSET $1 LIMIT $2",
+		skip, take,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	accounts := []Account{}
+
+	for rows.Next() {
+		a := &Account{}
+		if err = rows.Scan(&a.ID, &a, Name); err == nil {
+			accounts = append(accounts, *a)
+		}
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return accounts, nil
 }
