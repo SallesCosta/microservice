@@ -11,7 +11,7 @@ type Repository interface {
 	Close()
 	PutAccount(ctx context.Context, a Account) error
 	GetAccountByID(ctx context.Context, id string) (*Account, error)
-	ListAccounts(ctx context.Context, skip uint64) ([]Account, error)
+	ListAccounts(ctx context.Context, skip uint64, take uint64) ([]Account, error)
 }
 
 type postgresRepository struct {
