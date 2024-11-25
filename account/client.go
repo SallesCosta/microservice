@@ -2,7 +2,8 @@ package account
 
 import (
 	"context"
-	"github.com/sallescosta/fullProject/account/pb/pb"
+
+	"github.com/sallescosta/fullProject/account/pb"
 	"google.golang.org/grpc"
 )
 
