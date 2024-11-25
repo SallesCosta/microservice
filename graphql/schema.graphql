@@ -27,6 +27,7 @@ type OrderProduct {
     price: Float!
     quantity: Int!
 }
+
 input PaginationInput {
     skip: Int
     take: Int
