@@ -2,7 +2,8 @@ package catalog
 
 import (
 	"context"
-	"github.com/sallescosta/fullProject/account/pb"
+
+	"github.com/sallescosta/fullProject/catalog/pb"
 	"google.golang.org/grpc"
 )
 
@@ -16,7 +17,6 @@ func NewClient(url string) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	c := pb.NewCatalogServiceClient(conn)
 	return &Client{conn, c}, nil
 }
@@ -27,7 +27,8 @@ func (c *Client) Close() {
 
 func (c *Client) PostProduct(ctx context.Context, name, description string, price float64) (*Product, error) {
 	r, err := c.service.PostProduct(
-		ctx, pb.PostProductRequest{
+		ctx,
+		&pb.PostProductRequest{
 			Name:        name,
 			Description: description,
 			Price:       price,
@@ -36,7 +37,6 @@ func (c *Client) PostProduct(ctx context.Context, name, description string, pric
 	if err != nil {
 		return nil, err
 	}
-
 	return &Product{
 		ID:          r.Product.Id,
 		Name:        r.Product.Name,
@@ -77,7 +77,8 @@ func (c *Client) GetProducts(ctx context.Context, skip uint64, take uint64, ids 
 	if err != nil {
 		return nil, err
 	}
-	products := []Product{}
+	var products []Product
+
 	for _, p := range r.Products {
 		products = append(products, Product{
 			ID:          p.Id,
