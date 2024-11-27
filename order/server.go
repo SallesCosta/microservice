@@ -8,9 +8,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/sallescosta/fullProject/order/pb"
 	account "github.com/sallescosta/fullProject/account"
 	catalog "github.com/sallescosta/fullProject/catalog"
+	"github.com/sallescosta/fullProject/order/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -63,7 +63,7 @@ func (s *grpcServer) PostOrder(
 	}
 
 	// Get ordered products
-	productIDs := []string{}
+	var productIDs []string
 	for _, p := range r.Products {
 		productIDs = append(productIDs, p.ProductId)
 	}
@@ -74,7 +74,7 @@ func (s *grpcServer) PostOrder(
 	}
 
 	// Construct products
-	products := []OrderedProduct{}
+	var products []OrderedProduct
 	for _, p := range orderedProducts {
 		product := OrderedProduct{
 			ID:          p.ID,

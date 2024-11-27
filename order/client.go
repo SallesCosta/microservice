@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/sallescosta/fullProject/catalog/pb"
+	"github.com/sallescosta/fullProject/order/pb"
 	"google.golang.org/grpc"
 )
 

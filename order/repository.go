@@ -30,7 +30,10 @@ func NewPostgresRepository(url string) (Repository, error) {
 }
 
 func (r *postgresRepository) Close() {
-	r.db.Close()
+	err := r.db.Close()
+	if err != nil {
+		return
+	}
 }
 
 func (r *postgresRepository) PutOrder(ctx context.Context, o Order) (err error) {
@@ -40,7 +43,10 @@ func (r *postgresRepository) PutOrder(ctx context.Context, o Order) (err error) 
 	}
 	defer func() {
 		if err != nil {
-			tx.Rollback()
+			err := tx.Rollback()
+			if err != nil {
+				return
+			}
 			return
 		}
 		err = tx.Commit()
@@ -71,7 +77,10 @@ func (r *postgresRepository) PutOrder(ctx context.Context, o Order) (err error) 
 	if err != nil {
 		return
 	}
-	stmt.Close()
+	err = stmt.Close()
+	if err != nil {
+		return err
+	}
 
 	return
 }

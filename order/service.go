@@ -36,18 +36,14 @@ func NewService(r Repository) Service {
 	return &orderService{r}
 }
 
-func (s orderService) PostOrder(
-	ctx context.Context,
-	accountID string,
-	products []OrderedProduct,
-) (*Order, error) {
+func (s orderService) PostOrder(ctx context.Context, accountID string, products []OrderedProduct) (*Order, error) {
 	o := &Order{
 		ID:        ksuid.New().String(),
 		CreatedAt: time.Now().UTC(),
 		AccountID: accountID,
 		Products:  products,
 	}
-	// Calculate total price
+
 	o.TotalPrice = 0.0
 	for _, p := range products {
 		o.TotalPrice += p.Price * float64(p.Quantity)
