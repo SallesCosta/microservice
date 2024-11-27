@@ -14,18 +14,18 @@ type Product {
 }
 
 type Order {
-    id: String!
-    createdAt: Time
-    totalPrice: Float!
-    products: [OrderProduct!]!
+  id: String!
+  createdAt: Time!
+  totalPrice: Float!
+  products: [OrderedProduct!]!
 }
 
-type OrderProduct {
-    id: String!
-    name: String!
-    description: String!
-    price: Float!
-    quantity: Int!
+type OrderedProduct {
+  id: String!
+  name: String!
+  description: String!
+  price: Float!
+  quantity: Int!
 }
 
 input PaginationInput {
