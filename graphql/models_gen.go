@@ -10,27 +10,16 @@ type AccountInput struct {
 	Name string `json:"name"`
 }
 
-type Mutation struct {
-}
-
 type Order struct {
-	ID         string          `json:"id"`
-	CreatedAt  *time.Time      `json:"createdAt,omitempty"`
-	TotalPrice float64         `json:"totalPrice"`
-	Products   []*OrderProduct `json:"products"`
+	ID         string            `json:"id"`
+	CreatedAt  time.Time         `json:"createdAt"`
+	TotalPrice float64           `json:"totalPrice"`
+	Products   []*OrderedProduct `json:"products"`
 }
 
 type OrderInput struct {
 	AccountID string               `json:"accountId"`
-	Products  []*OrderProductInput `json:"products,omitempty"`
-}
-
-type OrderProduct struct {
-	ID          string  `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-	Quantity    int     `json:"quantity"`
+	Products  []*OrderProductInput `json:"products"`
 }
 
 type OrderProductInput struct {
@@ -38,9 +27,17 @@ type OrderProductInput struct {
 	Quantity int    `json:"quantity"`
 }
 
+type OrderedProduct struct {
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	Quantity    int     `json:"quantity"`
+}
+
 type PaginationInput struct {
-	Skip *int `json:"skip,omitempty"`
-	Take *int `json:"take,omitempty"`
+	Skip *int `json:"skip"`
+	Take *int `json:"take"`
 }
 
 type Product struct {
@@ -54,7 +51,4 @@ type ProductInput struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
-}
-
-type Query struct {
 }
