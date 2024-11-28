@@ -1,5 +1,4 @@
-//go:generate protoc --go_out=./pb --go-grpc_out=./pb ./account.proto
-
+//go:generate protoc ./account.proto --go_out=plugins=grpc:./pb
 package account
 
 import (
@@ -13,20 +12,16 @@ import (
 )
 
 type grpcServer struct {
-	pb.UnimplementedAccountServiceServer
 	service Service
 }
 
-func ListeningGRPC(s Service, port int) error {
+func ListenGRPC(s Service, port int) error {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		return err
 	}
 	serv := grpc.NewServer()
-	pb.RegisterAccountServiceServer(serv, &grpcServer{
-		UnimplementedAccountServiceServer: pb.UnimplementedAccountServiceServer{},
-		service:                           s,
-	})
+	pb.RegisterAccountServiceServer(serv, &grpcServer{s})
 	reflection.Register(serv)
 	return serv.Serve(lis)
 }
@@ -36,7 +31,6 @@ func (s *grpcServer) PostAccount(ctx context.Context, r *pb.PostAccountRequest) 
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.PostAccountResponse{Account: &pb.Account{
 		Id:   a.ID,
 		Name: a.Name,
@@ -48,11 +42,12 @@ func (s *grpcServer) GetAccount(ctx context.Context, r *pb.GetAccountRequest) (*
 	if err != nil {
 		return nil, err
 	}
-
-	return &pb.GetAccountResponse{Account: &pb.Account{
-		Id:   a.ID,
-		Name: a.Name,
-	}}, nil
+	return &pb.GetAccountResponse{
+		Account: &pb.Account{
+			Id:   a.ID,
+			Name: a.Name,
+		},
+	}, nil
 }
 
 func (s *grpcServer) GetAccounts(ctx context.Context, r *pb.GetAccountsRequest) (*pb.GetAccountsResponse, error) {
@@ -60,11 +55,15 @@ func (s *grpcServer) GetAccounts(ctx context.Context, r *pb.GetAccountsRequest) 
 	if err != nil {
 		return nil, err
 	}
-
 	accounts := []*pb.Account{}
 	for _, p := range res {
-		accounts = append(accounts, &pb.Account{Id: p.ID, Name: p.Name})
+		accounts = append(
+			accounts,
+			&pb.Account{
+				Id:   p.ID,
+				Name: p.Name,
+			},
+		)
 	}
-
 	return &pb.GetAccountsResponse{Accounts: accounts}, nil
 }

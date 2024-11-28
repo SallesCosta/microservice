@@ -77,8 +77,7 @@ func (c *Client) GetProducts(ctx context.Context, skip uint64, take uint64, ids 
 	if err != nil {
 		return nil, err
 	}
-	var products []Product
-
+	products := []Product{}
 	for _, p := range r.Products {
 		products = append(products, Product{
 			ID:          p.Id,

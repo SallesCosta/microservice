@@ -63,7 +63,7 @@ func (s *grpcServer) PostOrder(
 	}
 
 	// Get ordered products
-	var productIDs []string
+	productIDs := []string{}
 	for _, p := range r.Products {
 		productIDs = append(productIDs, p.ProductId)
 	}
@@ -74,7 +74,7 @@ func (s *grpcServer) PostOrder(
 	}
 
 	// Construct products
-	var products []OrderedProduct
+	products := []OrderedProduct{}
 	for _, p := range orderedProducts {
 		product := OrderedProduct{
 			ID:          p.ID,

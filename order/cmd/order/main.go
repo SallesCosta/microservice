@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/kelseyhightower/envconfig"
 	"github.com/sallescosta/fullProject/order"
+	"github.com/kelseyhightower/envconfig"
 	"github.com/tinrab/retry"
 )
 
@@ -17,7 +17,6 @@ type Config struct {
 
 func main() {
 	var cfg Config
-
 	err := envconfig.Process("", &cfg)
 	if err != nil {
 		log.Fatal(err)
@@ -33,10 +32,7 @@ func main() {
 	})
 	defer r.Close()
 
-	port := 8080
-
-	log.Printf("Listening on port %d...", port)
-
+	log.Println("Listening on port 8080...")
 	s := order.NewService(r)
-	log.Fatal(order.ListenGRPC(s, cfg.AccountURL, cfg.CatalogURL, port))
+	log.Fatal(order.ListenGRPC(s, cfg.AccountURL, cfg.CatalogURL, 8080))
 }

@@ -13,7 +13,6 @@ import (
 )
 
 type grpcServer struct {
-	pb.UnimplementedCatalogServiceServer
 	service Service
 }
 
@@ -23,10 +22,7 @@ func ListenGRPC(s Service, port int) error {
 		return err
 	}
 	serv := grpc.NewServer()
-	pb.RegisterCatalogServiceServer(serv, &grpcServer{
-		UnimplementedCatalogServiceServer: pb.UnimplementedCatalogServiceServer{},
-		service:                           s,
-	})
+	pb.RegisterCatalogServiceServer(serv, &grpcServer{s})
 	reflection.Register(serv)
 	return serv.Serve(lis)
 }
@@ -76,7 +72,7 @@ func (s *grpcServer) GetProducts(ctx context.Context, r *pb.GetProductsRequest) 
 		return nil, err
 	}
 
-	var products []*pb.Product
+	products := []*pb.Product{}
 	for _, p := range res {
 		products = append(
 			products,
